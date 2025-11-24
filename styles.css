@@ -518,18 +518,57 @@ h3 {
 .contact-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    gap: 3rem;
 }
 
 .contact-info h3,
 .contact-form h3 {
     color: var(--primary-color);
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    font-size: 1.9rem;
+}
+
+.contact-info {
+    background: var(--gradient-card);
+    padding: 3rem 2.5rem;
+    border-radius: 20px;
+    box-shadow: 
+        0 10px 30px rgba(74, 74, 74, 0.08),
+        0 1px 8px rgba(74, 74, 74, 0.06);
+    border: 1px solid rgba(156, 175, 136, 0.1);
+    height: fit-content;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .contact-info p {
-    margin-bottom: 1rem;
-    color: var(--text-light);
+    margin-bottom: 2rem;
+    color: var(--text-charcoal);
+    font-size: 1.15rem;
+    line-height: 1.7;
+}
+
+.contact-info p:last-child {
+    margin-bottom: 0;
+}
+
+.contact-info strong {
+    color: var(--text-sage-dark);
+    font-weight: 600;
+}
+
+.contact-info a {
+    color: var(--primary-sage);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.contact-info a:hover {
+    color: var(--primary-warm);
+    text-decoration: underline;
 }
 
 .contact-form form {
