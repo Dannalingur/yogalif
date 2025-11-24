@@ -58,50 +58,133 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Form Submission - Handled by Formspree
+// Form Submission with AJAX to prevent redirect
 const contactForm = document.querySelector('.contact-form form');
 
-// Check for success message in URL
-document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('message') === 'sent') {
-        // Show success message
-        const successDiv = document.createElement('div');
-        successDiv.className = 'form-success-message';
-        successDiv.innerHTML = '<p><strong>Takk fyrir!</strong> Skilaboðin þín hafa verið send. Við munum svara eins fljótt og auðið er.</p>';
-        successDiv.style.cssText = `
-            background: linear-gradient(135deg, var(--primary-sage), var(--primary-warm));
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(156, 175, 136, 0.3);
-        `;
-        
-        const form = document.querySelector('.contact-form form');
-        if (form) {
-            form.parentNode.insertBefore(successDiv, form);
-            // Clear the URL parameter
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-    }
-});
-
 if (contactForm) {
-    contactForm.addEventListener('submit', function() {
-        // Show loading state
-        const submitBtn = contactForm.querySelector('button[type="submit"]');
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+        
+        // Get form data
+        const formData = new FormData(this);
+        const submitBtn = this.querySelector('button[type="submit"]');
         const originalText = submitBtn.textContent;
+        
+        // Show loading state
         submitBtn.textContent = 'Sendir...';
         submitBtn.disabled = true;
         
-        // Reset button after a short delay (form will redirect)
-        setTimeout(() => {
+        // Submit form via AJAX
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Show success message
+                showSuccessMessage();
+                // Reset form
+                this.reset();
+            } else {
+                throw new Error('Form submission failed');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Show error message
+            showErrorMessage();
+        })
+        .finally(() => {
+            // Reset button
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
-        }, 2000);
+        });
     });
+}
+
+function showSuccessMessage() {
+    // Remove any existing messages
+    const existingMessage = document.querySelector('.form-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+    
+    // Create success message
+    const successDiv = document.createElement('div');
+    successDiv.className = 'form-message form-success';
+    successDiv.innerHTML = '<p><strong>Takk fyrir fyrirspurnina.</strong> Við munum hafa samband við þig.</p>';
+    successDiv.style.cssText = `
+        background: linear-gradient(135deg, var(--primary-sage), var(--primary-warm));
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(156, 175, 136, 0.3);
+        animation: slideIn 0.5s ease-out;
+    `;
+    
+    const form = document.querySelector('.contact-form form');
+    if (form) {
+        form.parentNode.insertBefore(successDiv, form);
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            if (successDiv.parentNode) {
+                successDiv.style.transition = 'opacity 0.5s ease-out';
+                successDiv.style.opacity = '0';
+                setTimeout(() => {
+                    if (successDiv.parentNode) {
+                        successDiv.remove();
+                    }
+                }, 500);
+            }
+        }, 5000);
+    }
+}
+
+function showErrorMessage() {
+    // Remove any existing messages
+    const existingMessage = document.querySelector('.form-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+    
+    // Create error message
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'form-message form-error';
+    errorDiv.innerHTML = '<p><strong>Villa kom upp.</strong> Vinsamlegast reyndu aftur eða hafðu samband í síma.</p>';
+    errorDiv.style.cssText = `
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        animation: slideIn 0.5s ease-out;
+    `;
+    
+    const form = document.querySelector('.contact-form form');
+    if (form) {
+        form.parentNode.insertBefore(errorDiv, form);
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.style.transition = 'opacity 0.5s ease-out';
+                errorDiv.style.opacity = '0';
+                setTimeout(() => {
+                    if (errorDiv.parentNode) {
+                        errorDiv.remove();
+                    }
+                }, 500);
+            }
+        }, 5000);
+    }
 }
 
 // Scroll Animation
