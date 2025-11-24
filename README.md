@@ -67,11 +67,11 @@ yogalif/
 ## Contact
 
 YogaLíf  
-Hlíðasmára 17  
+Hlíðarsmári 17  
 200 Kópavogur  
 Iceland  
 
-Phone: 581-2345  
+Phone: 789-4540  
 Email: yogalif@yogalif.is
 
 ## License
