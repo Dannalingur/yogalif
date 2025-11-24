@@ -293,10 +293,18 @@
                 </div>
                 <div class="contact-form">
                     <h3>Sendið Okkur Skilaboð</h3>
-                    <form>
-                        <input type="text" placeholder="Nafn" required>
-                        <input type="email" placeholder="Netfang" required>
-                        <textarea placeholder="Skilaboð" rows="5" required></textarea>
+                    <form action="https://formspree.io/f/xldkgylw" method="POST">
+                        <input type="hidden" name="_subject" value="Ný skilaboð frá YogaLíf heimasíðu">
+                        <input type="hidden" name="_next" value="https://yogalif.onrender.com/index.html?message=sent">
+                        <label for="name">
+                            <input type="text" id="name" name="name" placeholder="Nafn" required>
+                        </label>
+                        <label for="email">
+                            <input type="email" id="email" name="email" placeholder="Netfang" required>
+                        </label>
+                        <label for="message">
+                            <textarea id="message" name="message" placeholder="Skilaboð" rows="5" required></textarea>
+                        </label>
                         <button type="submit" class="btn-primary">Senda Skilaboð</button>
                     </form>
                 </div>

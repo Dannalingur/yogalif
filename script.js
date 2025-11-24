@@ -58,25 +58,51 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Form Submission
+// Form Submission - Handled by Formspree
 const contactForm = document.querySelector('.contact-form form');
 
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    // Get form values
-    const name = e.target[0].value;
-    const email = e.target[1].value;
-    const message = e.target[2].value;
-    
-    // Simple form validation
-    if (name && email && message) {
-        alert(`Thank you for your message, ${name}! We'll get back to you soon.`);
-        contactForm.reset();
-    } else {
-        alert('Please fill in all fields.');
+// Check for success message in URL
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('message') === 'sent') {
+        // Show success message
+        const successDiv = document.createElement('div');
+        successDiv.className = 'form-success-message';
+        successDiv.innerHTML = '<p><strong>Takk fyrir!</strong> Skilaboðin þín hafa verið send. Við munum svara eins fljótt og auðið er.</p>';
+        successDiv.style.cssText = `
+            background: linear-gradient(135deg, var(--primary-sage), var(--primary-warm));
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(156, 175, 136, 0.3);
+        `;
+        
+        const form = document.querySelector('.contact-form form');
+        if (form) {
+            form.parentNode.insertBefore(successDiv, form);
+            // Clear the URL parameter
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
     }
 });
+
+if (contactForm) {
+    contactForm.addEventListener('submit', function() {
+        // Show loading state
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Sendir...';
+        submitBtn.disabled = true;
+        
+        // Reset button after a short delay (form will redirect)
+        setTimeout(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }, 2000);
+    });
+}
 
 // Scroll Animation
 const observerOptions = {

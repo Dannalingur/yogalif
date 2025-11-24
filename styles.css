@@ -538,6 +538,11 @@ h3 {
     gap: 1rem;
 }
 
+.contact-form label {
+    display: block;
+    width: 100%;
+}
+
 .contact-form input,
 .contact-form textarea {
     padding: 16px 20px;
